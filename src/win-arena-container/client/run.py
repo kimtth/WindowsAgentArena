@@ -180,7 +180,8 @@ def test(
             }
         
         agent = NaviAgent(
-            server="oai",
+            server="azure",
+            # server="oai",
             model=args.model,
             som_config=som_config,
             som_origin=args.som_origin,
