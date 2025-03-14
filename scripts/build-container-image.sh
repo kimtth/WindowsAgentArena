@@ -36,6 +36,7 @@ done
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 echo "$SCRIPT_DIR/../"
+read -p "Press Enter if you want to continue..."  # Prevent window from closing
 
 if [ "$build_base_image" = true ]; then
   echo "Building winarena-base image"

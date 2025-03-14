@@ -1,6 +1,7 @@
 # Function to log error message and exit
 log_error_exit() {
     echo "Error: $1" >&2
+	read -p "Press Enter to exit..."  # Prevent window from closing
     exit 1
 }
 

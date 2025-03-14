@@ -12,7 +12,7 @@ skip_build=false
 interactive=false
 connect=false
 use_kvm=true
-ram_size=8G
+ram_size=6G
 cpu_cores=8
 mount_vm_storage=true
 mount_client=true
@@ -152,13 +152,19 @@ config_file_path=$(getrealpath $config_file_path)
 echo "Using configuration file: $config_file_path"
 echo "Using mode: $mode"
 
-OPENAI_API_KEY=$(extract_json_field_from_file "OPENAI_API_KEY" "$config_file_path")
+# OPENAI_API_KEY=$(extract_json_field_from_file "OPENAI_API_KEY" "$config_file_path")
 AZURE_API_KEY=$(extract_json_field_from_file "AZURE_API_KEY" "$config_file_path")
 AZURE_ENDPOINT=$(extract_json_field_from_file "AZURE_ENDPOINT" "$config_file_path")
+AZURE_MODEL_NAME=$(extract_json_field_from_file "AZURE_MODEL_NAME" "$config_file_path")
 
 # Check if at least one key has been set: OPENAI_API_KEY or both AZURE_API_KEY and AZURE_ENDPOINT
-if [[ -z "$OPENAI_API_KEY" && (-z "$AZURE_API_KEY" || -z "$AZURE_ENDPOINT") ]]; then
-    log_error_exit "Either OPENAI_API_KEY must be set or both AZURE_API_KEY and AZURE_ENDPOINT must be set: $1"
+# if [[ -z "$OPENAI_API_KEY" && (-z "$AZURE_API_KEY" || -z "$AZURE_ENDPOINT") ]]; then
+#     log_error_exit "Either OPENAI_API_KEY must be set or both AZURE_API_KEY and AZURE_ENDPOINT must be set: $1"
+# fi
+
+# Modified for AZURE_API_KEY and AZURE_ENDPOINT only
+if [[ -z "$AZURE_API_KEY" || -z "$AZURE_ENDPOINT" || -z "$AZURE_MODEL_NAME" ]]; then
+    log_error_exit "Both AZURE_API_KEY, AZURE_ENDPOINT, and AZURE_MODEL_NAME must be set: $1"
 fi
 
-./run.sh --mode $mode --prepare-image $prepare_image --container-name $container_name --skip-build $skip_build --interactive $interactive --connect $connect --use-kvm $use_kvm --ram-size $ram_size --cpu-cores $cpu_cores --mount-vm-storage $mount_vm_storage --mount-client $mount_client --mount-server $mount_server --browser-port $browser_port --rdp-port $rdp_port --start-client $start_client --agent $agent --model $model --som-origin $som_origin --a11y-backend $a11y_backend --gpu-enabled $gpu_enabled --openai-api-key $OPENAI_API_KEY --azure-api-key $AZURE_API_KEY --azure-endpoint $AZURE_ENDPOINT
+./run.sh --mode $mode --prepare-image $prepare_image --container-name $container_name --skip-build $skip_build --interactive $interactive --connect $connect --use-kvm $use_kvm --ram-size $ram_size --cpu-cores $cpu_cores --mount-vm-storage $mount_vm_storage --mount-client $mount_client --mount-server $mount_server --browser-port $browser_port --rdp-port $rdp_port --start-client $start_client --agent $agent --model $AZURE_MODEL_NAME --som-origin $som_origin --a11y-backend $a11y_backend --gpu-enabled $gpu_enabled --azure-api-key $AZURE_API_KEY --azure-endpoint $AZURE_ENDPOINT

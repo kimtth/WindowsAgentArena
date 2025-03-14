@@ -1,35 +1,71 @@
+
 <div align="center">
     
 ![Banner](img/banner.png)
+[![Website](https://img.shields.io/badge/Website-red)](https://microsoft.github.io/WindowsAgentArena)
+[![arXiv](https://img.shields.io/badge/Paper-green)](https://arxiv.org/abs/2409.08264)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs](https://img.shields.io/badge/AI-Podcast-blue.svg?logo=data:image/svg%2bxml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgaWQ9IlNWR1JlcG9fYmdDYXJyaWVyIiBzdHJva2Utd2lkdGg9IjAiPjwvZz48ZyBpZD0iU1ZHUmVwb190cmFjZXJDYXJyaWVyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvZz48ZyBpZD0iU1ZHUmVwb19pY29uQ2FycmllciI+PHBhdGggZD0iTTEzLDRWMjBhMSwxLDAsMCwxLTIsMFY0YTEsMSwwLDAsMSwyLDBaTTgsNUExLDEsMCwwLDAsNyw2VjE4YTEsMSwwLDAsMCwyLDBWNkExLDEsMCwwLDAsOCw1Wk00LDdBMSwxLDAsMCwwLDMsOHY4YTEsMSwwLDAsMCwyLDBWOEExLDEsMCwwLDAsNCw3Wk0xNiw1YTEsMSwwLDAsMC0xLDFWMThhMSwxLDAsMCwwLDIsMFY2QTEsMSwwLDAsMCwxNiw1Wm00LDJhMSwxLDAsMCwwLTEsMXY4YTEsMSwwLDAsMCwyLDBWOEExLDEsMCwwLDAsMjAsN1oiPjwvcGF0aD48L2c+PC9zdmc+)](https://microsoft.github.io/WindowsAgentArena/static/files/waa_podcast.wav)
 
 </div>
 
-**Important:** Do not try this demo with Python versions newer than 3.10. It is recommended to use Python 3.10 to execute the Python script, such as generating the result with `show_results.py`. Python is only required to run the script; it is not needed for the Windows Arena VM.
+**Windows Agent Arena (WAA) 🪟** is a scalable Windows AI agent platform for testing and benchmarking multi-modal, desktop AI agents. WAA provides researchers and developers with a reproducible and realistic Windows OS environment for AI research, where agentic AI workflows can be tested across a diverse range of tasks.
 
+WAA supports the deployment of agents **at scale** using the Azure ML cloud infrastructure, allowing for the parallel running of multiple agents and delivering quick benchmark results for hundreds of tasks in minutes, not days.
+
+<div align="center">
+    <video src="https://github.com/user-attachments/assets/e0a8d88d-d28a-493d-b74f-2455f36c21f1" alt="waa_intro">
+</div>
+
+## 📢 Updates
+- 2024-11-10: We added a new difficulty mode for Windows Agent Arena! You can try the new harder difficulty mode by changing the default `diff_lvl="normal"` to `diff_lvl="hard"` in `src/win-arena-container/start_client.sh`. Under the harder difficulty, in many tasks, agents must also learn to initialize/set up the task themselves (e.g., finding and opening the right program/application for the task) rather than have the task "set up" for them by the task config.
+- 2024-10-30: We released the code for our Navi agent with Omniparser! For the top performing mode in the paper, run `./run-local.sh --som-origin mixed-omni --gpu-enabled true`
+- 2024-10-23: Microsoft open-sourced [Omniparser](https://github.com/microsoft/OmniParser), the current top performing screen understanding model in our benchmark.
+- 2024-09-13: We released our [paper](https://arxiv.org/abs/2409.08264), [code](https://github.com/microsoft/WindowsAgentArena), [project page](https://microsoft.github.io/WindowsAgentArena), and [blog post](https://www.microsoft.com/applied-sciences/projects/windows-agent-arena). Check it out!
+
+## 📚 Citation
+Our technical report paper can be found [here](https://arxiv.org/abs/2409.08264).
+If you find this environment useful, please consider citing our work:
+```
+@article{bonatti2024windows,
+author = { Bonatti, Rogerio and Zhao, Dan and Bonacci, Francesco and Dupont, Dillon, and Abdali, Sara and Li, Yinheng and Wagle, Justin and Koishida, Kazuhito and Bucker, Arthur and Jang, Lawrence and Hui, Zack},
+title = {Windows Agent Arena: Evaluating Multi-Modal OS Agents at Scale},
+institution = {Microsoft},
+year = {2024},
+month = {September}, 
+}
+```
+
+## ☝️ Pre-requisites:
+
+<div align="center">
+    <img src="img/main.png" alt="main" height="200"/>
+</div>
+
+- Docker daemon installed and running. On Windows, we recommend using [Docker with WSL 2](https://docs.docker.com/desktop/wsl/).
+- An [OpenAI](https://platform.openai.com/docs/introduction) or [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) API Key.
+- Python 3.9 - we recommend using [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) and creating an adhoc python environment for running the scripts. For creating a new environment run `conda create -n winarena python=3.9`.
+
+Clone the repository and install dependencies:
 ```bash
-> poetry env use python3.10
-```
-To install the dependencies specified in your pyproject.toml file.
-```
-> poety install
+git clone https://github.com/microsoft/WindowsAgentArena.git
+cd WindowsAgentArena
+# Install the required dependencies in your python environment
+# conda activate winarena
+pip install -r requirements.txt
 ```
 
-> [!NOTE]  
-> Added additional points to consider during the configuration, modified the script for Azure OpenAI, and managed dependencies using Poetry.  
->  
-> For updates or the latest release, visit the [official repository](https://github.com/microsoft/WindowsAgentArena).
-
-## 💻 Local deployment (WSL Ubuntu)
+## 💻 Local deployment (WSL or Linux)
 
 
 ### 1. Configuration file
-Create a new `config.json` at the root of the project with the necessary keys (from Azure OpenAI):
+Create a new `config.json` at the root of the project with the necessary keys (from OpenAI or Azure endpoints):
 
 ```json
 {
-    "AZURE_API_KEY": "<your_api_key>",  // if you are using Azure endpoint
-    "AZURE_ENDPOINT": "https://<your_endpoint>.openai.azure.com/", // if you are using Azure endpoint
-    "AZURE_MODEL_NAME": "<your_model_name>" // Added the parameter for Model name. The Azure OpenAI model name is set to `gpt-4-vision-preview` by default in the original script.
+    "OPENAI_API_KEY": "<OPENAI_API_KEY>", // if you are using OpenAI endpoint
+    "AZURE_API_KEY": "<AZURE_API_KEY>",  // if you are using Azure endpoint
+    "AZURE_ENDPOINT": "https://yourendpoint.openai.azure.com/", // if you are using Azure endpoint
 }
 ```
 
@@ -45,32 +81,7 @@ docker pull windowsarena/winarena-base:latest
 
 This image includes all the necessary dependencies (such as packages and models) required to run the code in the `src` directory.
 
-#### 2.2 Activate WSL Integration
-
-To use Docker in WSL, the Ubuntu integration must be turned `On` under Docker Desktop > Settings > Resources > Integration.
-
-<div align="left">
-    <img src="docs/wsl2_integration_ubuntu.png" alt="wsl2_integration_ubuntu" width="500"/>
-</div>
-
-#### 2.3 Open PowerShell to Access WSL
-
-Run PowerShell as Administrator and list the available images in WSL:
-
-```powershell
-> wsl -l --verbose
-  NAME              STATE           VERSION
-* docker-desktop    Stopped         2
-  Ubuntu            Stopped         
-```
-
-Select Ubuntu:
-
-```powershell
-> wsl -d Ubuntu
-```
-
-#### 2.4 Build the WinArena Image Locally
+#### 2.2 Build the WinArena Image Locally
 
 Next, build the WinArena image locally:
 
@@ -106,12 +117,6 @@ cd ./scripts
 ./run-local.sh --prepare-image true
 ```
 You can monitor progress at `http://localhost:8006`. The preparation process is fully automated and will take ~20 minutes.
-
-The upper blue screen is the monitor displayed when accessing `http://localhost:8006`. The area below shows the output in PowerShell during the preparation process.
-
-<div align="center">
-    <img src="docs/localhost_8006.png" alt="localhost_8006" height="450"/>
-</div>
 
 **Please do not interfere with the VM while it is being prepared. It will automatically shut down when the provisioning process is complete.**
 

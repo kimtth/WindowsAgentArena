@@ -1,0 +1,21 @@
+[project]
+name = "windows-agent-arena-mod"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "kimtth",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = "^3.10"
+dependencies = [
+    "azure-ai-ml (>=1.26.0,<2.0.0)",
+    "azure-identity (>=1.21.0,<2.0.0)",
+    "azureml-core (>=1.59.0.post1,<2.0.0)",
+    "azureml-dataset-runtime (>=1.59.0,<2.0.0)",
+    "pandas (==1.3.5)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
